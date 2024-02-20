@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MentionsInput, Mention } from "react-mentions";
 
 const Home = ({ socket }) => {
   const navigate = useNavigate();
@@ -8,7 +7,15 @@ const Home = ({ socket }) => {
   const [password, setPassword] = useState("");
   const [channel, setChannel] = useState("1");
 
-  const [value, setValue] = useState("");
+  const [moderator, setModerator] = useState("bot");
+  const [admin, setAdmin] = useState(false);
+
+  const handleChange = (e) => {
+    if (e.target.value.trim().toLowerCase() === "admin") {
+      setAdmin(true);
+    } else setAdmin(false);
+    setUserName(e.target.value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,6 +25,7 @@ const Home = ({ socket }) => {
       password,
       channel,
       socketID: socket.id,
+      moderator,
     });
     navigate(`/chat?room=${channel}`);
   };
@@ -32,7 +40,7 @@ const Home = ({ socket }) => {
         id="username"
         className="username__input"
         value={userName}
-        onChange={(e) => setUserName(e.target.value)}
+        onChange={handleChange}
         required
       />
       <label htmlFor="password">Password</label>
@@ -46,6 +54,21 @@ const Home = ({ socket }) => {
         onChange={(e) => setPassword(e.target.value)}
         required
       />
+      {admin && (
+        <>
+          <label htmlFor="channel">Moderator</label>
+          <select
+            value={moderator}
+            name=""
+            id=""
+            onChange={(e) => setModerator(e.target.value)}
+          >
+            <option value="bot">Bot</option>
+            <option value="human">Human</option>
+          </select>
+        </>
+      )}
+
       <label htmlFor="channel">Channel</label>
       <input
         type="number"
@@ -56,6 +79,7 @@ const Home = ({ socket }) => {
         onChange={(e) => setChannel(e.target.value)}
         required
       />
+
       <button className="home__cta">SIGN IN</button>
     </form>
   );

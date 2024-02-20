@@ -22,16 +22,41 @@ const ChatBody = ({
   room,
   title,
   socket,
+  sessionTime,
+  setSessionTime,
 }) => {
   const navigate = useNavigate();
   const [timer, setTimer] = useState(false);
+
   const [start, setStart] = useState(
-    localStorage.getItem("userName").trim().toLowerCase() === "test"
+    localStorage.getItem("userName").trim().toLowerCase() === "admin"
   );
+  useEffect(() => {
+    socket.on("timerStarted", (data) => {
+      setTimer(true);
+      if (data?.date) {
+        setSessionTime((prevSessionTime) => {
+          const calculatedTime =
+            prevSessionTime -
+            (new Date().getTime() / 1000 -
+              new Date(data.date).getTime() / 1000);
+          // console.log(
+          //   "sessionTime before setSessionTime",
+          //   prevSessionTime,
+          //   "calculatedTime",
+          //   calculatedTime
+          // );
+          return calculatedTime;
+        });
+      }
+    });
+  }, [socket]);
 
   useEffect(() => {
-    socket.on("timerStarted", () => {
-      setTimer(true);
+    socket.on("quit", () => {
+      localStorage.removeItem("userName");
+      navigate("/");
+      window.location.reload();
     });
   }, [socket]);
 
@@ -46,13 +71,19 @@ const ChatBody = ({
     window.location.reload();
   };
 
+  const handleEndChat = () => {
+    socket.emit("end", {
+      channel: room,
+      name: localStorage.getItem("userName"),
+      id: socket.id,
+    });
+  };
+
   const handleTimerUpdate = (remainingTime) => {
-    console.log(remainingTime);
     if (remainingTime == 20) {
       socket.emit("wrapUp", {
         channel: room,
       });
-      console.log("emitted");
     }
   };
   const handleStartChat = () => {
@@ -82,7 +113,6 @@ const ChatBody = ({
 
     return ret;
   }
-
   return (
     <>
       <header className="chat__mainHeader">
@@ -90,7 +120,7 @@ const ChatBody = ({
         <CountdownCircleTimer
           size={60}
           isPlaying={timer}
-          duration={300}
+          duration={sessionTime}
           colors={["#7CFC00", "#FFA500", "#A30000"]}
           colorsTime={[300, 50, 0]}
           onUpdate={handleTimerUpdate}
@@ -102,6 +132,12 @@ const ChatBody = ({
           {start && (
             <button className="start__btn" onClick={handleStartChat}>
               Start
+            </button>
+          )}
+          {localStorage.getItem("userName").trim().toLowerCase() ===
+            "admin" && (
+            <button className="leaveChat__btn" onClick={handleEndChat}>
+              End Chat
             </button>
           )}
           <button className="leaveChat__btn" onClick={handleLeaveChat}>
