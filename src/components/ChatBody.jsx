@@ -50,9 +50,9 @@ const ChatBody = ({
 
           console.log(
             dubaiTime,
-            new Date(currentDubaiTime).getTime(),
-            new Date(currentDubaiTime),
-            new Date(dubaiTime),
+            // new Date(currentDubaiTime).getTime(),
+            // new Date(currentDubaiTime),
+            // new Date(dubaiTime),
             "data.date",
             data?.date
           );
@@ -145,7 +145,7 @@ const ChatBody = ({
         <CountdownCircleTimer
           size={60}
           isPlaying={timer}
-          duration={600}
+          duration={sessionTime}
           colors={["#7CFC00", "#FFA500", "#A30000"]}
           colorsTime={[300, 50, 0]}
           onUpdate={handleTimerUpdate}
