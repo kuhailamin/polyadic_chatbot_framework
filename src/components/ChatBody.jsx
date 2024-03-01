@@ -40,11 +40,15 @@ const ChatBody = ({
             timeZone: "Asia/Dubai",
           });
 
+          console.log(currentDubaiTime);
+
           // Convert data.date to a Date object in Dubai timezone
           const dubaiDate = new Date(data.date);
           const dubaiTime = dubaiDate.toLocaleString("en-US", {
             timeZone: "Asia/Dubai",
           });
+
+          console.log(dubaiTime, new Date(currentDubaiTime).getTime(), new Date(currentDubaiTime), new Date(dubaiTime));
 
           // Get the time in milliseconds for the Dubai date
           const dubaiTimeMilliseconds = new Date(dubaiTime).getTime();
