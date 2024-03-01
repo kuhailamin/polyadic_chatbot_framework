@@ -36,10 +36,24 @@ const ChatBody = ({
       setTimer(true);
       if (data?.date) {
         setSessionTime((prevSessionTime) => {
-          const calculatedTime =
-            prevSessionTime -
-            (new Date().getTime() / 1000 -
-              new Date(data.date).getTime() / 1000);
+          const currentDubaiTime = new Date().toLocaleString("en-US", {
+            timeZone: "Asia/Dubai",
+          });
+
+          // Convert data.date to a Date object in Dubai timezone
+          const dubaiDate = new Date(data.date);
+          const dubaiTime = dubaiDate.toLocaleString("en-US", {
+            timeZone: "Asia/Dubai",
+          });
+
+          // Get the time in milliseconds for the Dubai date
+          const dubaiTimeMilliseconds = new Date(dubaiTime).getTime();
+
+          // Calculate the time difference in seconds
+          const timeDifferenceInSeconds =
+            (new Date(currentDubaiTime).getTime() - dubaiTimeMilliseconds) /
+            1000;
+          const calculatedTime = prevSessionTime - timeDifferenceInSeconds;
           // console.log(
           //   "sessionTime before setSessionTime",
           //   prevSessionTime,
