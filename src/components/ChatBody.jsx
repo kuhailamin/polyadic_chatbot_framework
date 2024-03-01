@@ -48,7 +48,12 @@ const ChatBody = ({
             timeZone: "Asia/Dubai",
           });
 
-          console.log(dubaiTime, new Date(currentDubaiTime).getTime(), new Date(currentDubaiTime), new Date(dubaiTime));
+          console.log(
+            dubaiTime,
+            new Date(currentDubaiTime).getTime(),
+            new Date(currentDubaiTime),
+            new Date(dubaiTime)
+          );
 
           // Get the time in milliseconds for the Dubai date
           const dubaiTimeMilliseconds = new Date(dubaiTime).getTime();
@@ -138,7 +143,7 @@ const ChatBody = ({
         <CountdownCircleTimer
           size={60}
           isPlaying={timer}
-          duration={sessionTime}
+          duration={600}
           colors={["#7CFC00", "#FFA500", "#A30000"]}
           colorsTime={[300, 50, 0]}
           onUpdate={handleTimerUpdate}
