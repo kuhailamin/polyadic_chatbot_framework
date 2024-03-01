@@ -52,7 +52,9 @@ const ChatBody = ({
             dubaiTime,
             new Date(currentDubaiTime).getTime(),
             new Date(currentDubaiTime),
-            new Date(dubaiTime)
+            new Date(dubaiTime),
+            "data.date",
+            data?.date
           );
 
           // Get the time in milliseconds for the Dubai date
