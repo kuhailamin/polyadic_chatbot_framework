@@ -82,7 +82,7 @@
   background-color: #d1512d;
   cursor: pointer;
   color: #eae3d2;
-  margin:0 1rem;
+  margin: 0 1rem;
 }
 
 .start__btn {
@@ -139,18 +139,25 @@
   background-color: rgb(129, 201, 129);
 }
 .message__recipient {
-  background-color: #f5ccc2;
+  /* background-color: #f5ccc2; */
   /* width: 500px; */
   padding: 10px;
   border-radius: 10px;
   font-size: 15px;
   max-width: 1000px;
+  width: fit-content;
   overflow: auto;
   padding-left: 20px;
   /* word-wrap: break-word; */
 }
+.reply {
+  padding: 0 1rem;
+  /* border: 1px solid white; */
+  margin-bottom: 1rem;
+  /* background-color: #f7e4df; */
+}
 .message__sender {
-  background-color: rgb(194, 243, 194);
+  /* background-color: rgb(194, 243, 194); */
   max-width: 300px;
   padding: 10px;
   border-radius: 10px;

@@ -13,9 +13,19 @@ const ChatPage = ({ socket, title }) => {
   const [sessionTime, setSessionTime] = useState(0);
   const room = searchParams.get("room");
 
+  const WORD_PER_SECOND = 0.2;
+  function calculateWritingTime(words) {
+    const totalTime = words * WORD_PER_SECOND;
+    return totalTime;
+  }
+
   useEffect(() => {
     socket.on("messageResponse", (data) => {
-      setMessages([...messages, data]);
+      const words = data?.text.split(/\s+/);
+      const time = calculateWritingTime(words);
+      setTimeout(() => {
+        setMessages([...messages, data]);
+      }, time);
     });
   }, [socket, messages]);
 

@@ -9,7 +9,13 @@ const ChatBar = ({ socket, room }) => {
     socket.on("usersInRoom", (data) => {
       setUsers(data);
     });
-    socket.on("newUserResponse", (data) => setUsers(data));
+    socket.on("newUserResponse", (data) => {
+      setUsers(data);
+      const index = data?.findIndex(
+        (user) => user.userName === localStorage.getItem("userName")
+      );
+      localStorage.setItem("index", index);
+    });
   }, [socket, users]);
 
   return (
@@ -19,7 +25,17 @@ const ChatBar = ({ socket, room }) => {
         <h4 className="chat__header">ACTIVE USERS</h4>
         <div className="chat__users">
           {users?.map((user) => (
-            <p key={user.socketID}>{user.userName}</p>
+            <p
+              style={{
+                color:
+                  user.userName == localStorage.getItem("userName")
+                    ? "green"
+                    : "",
+              }}
+              key={user.socketID}
+            >
+              {user.userName}
+            </p>
           ))}
         </div>
       </div>

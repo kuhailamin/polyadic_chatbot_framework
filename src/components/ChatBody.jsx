@@ -6,6 +6,10 @@ import remarkGfm from "remark-gfm";
 import rehypeExternalLinks from "rehype-external-links";
 import loading from "../assets/circle-1700_256.gif";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import Reply from "./Reply";
+import { colors } from "../../constants";
+import axios from "axios";
+import { BASE_URL } from "../api";
 
 const linkRenderer = (props) => {
   return (
@@ -27,6 +31,7 @@ const ChatBody = ({
 }) => {
   const navigate = useNavigate();
   const [timer, setTimer] = useState(false);
+  const [users, setUsers] = useState([]);
 
   const [start, setStart] = useState(
     localStorage.getItem("userName").trim().toLowerCase() === "admin"
@@ -78,8 +83,21 @@ const ChatBody = ({
   }, [socket]);
 
   useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const { data } = await axios.get(`${BASE_URL}users?room=${room}`);
+        setUsers(data?.users);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
     socket.on("quit", () => {
       localStorage.removeItem("userName");
+      localStorage.removeItem("index");
       navigate("/");
       window.location.reload();
     });
@@ -138,6 +156,7 @@ const ChatBody = ({
 
     return ret;
   }
+  // console.log(users, messages);
   return (
     <>
       <header className="chat__mainHeader">
@@ -172,11 +191,27 @@ const ChatBody = ({
       </header>
 
       <div className="message__container">
-        {messages.map((message) =>
-          message.name === localStorage.getItem("userName") ? (
+        {messages.map((message) => {
+          const index = users.findIndex(
+            (user) => user.userName == message.name
+          );
+          console.log(message.name, index);
+          return message.name === localStorage.getItem("userName") ? (
             <div className="message__chats" key={message.id}>
               <p className="sender__name">You</p>
-              <div className="message__sender">
+              <div
+                className="message__sender"
+                style={{
+                  backgroundColor:
+                    message?.name == "The Moderator"
+                      ? "lightcoral"
+                      : colors[
+                          users.findIndex(
+                            (user) => user.userName == message.name
+                          )
+                        ],
+                }}
+              >
                 <Markdown
                   remarkPlugins={[remarkGfm]}
                   rehypePlugins={[[rehypeExternalLinks, { target: "_blank" }]]}
@@ -188,18 +223,40 @@ const ChatBody = ({
           ) : (
             <div className="message__chats" key={message.id}>
               <p>{message.name}</p>
-              <div className="message__recipient">
-                <Markdown
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[[rehypeExternalLinks, { target: "_blank" }]]}
+              {message?.replyTo ? (
+                <Reply
+                  text={message?.text}
+                  name={message?.author}
+                  original={message?.replyTo}
+                  users={users}
+                />
+              ) : (
+                <div
+                  className="message__recipient"
+                  style={{
+                    backgroundColor:
+                      message?.name == "The Moderator"
+                        ? "lightcoral"
+                        : colors[
+                            users.findIndex(
+                              (user) => user.userName == message.name
+                            )
+                          ],
+                  }}
                 >
-                  {message.text}
-                </Markdown>
-              </div>
+                  <Markdown
+                    remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[
+                      [rehypeExternalLinks, { target: "_blank" }],
+                    ]}
+                  >
+                    {message.text}
+                  </Markdown>
+                </div>
+              )}
             </div>
-          )
-        )}
-
+          );
+        })}
         <div className="message__status">
           {typingStatus && <img src={loading} alt="" width={20} height={20} />}
           <p>{typingStatus}</p>
