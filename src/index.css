@@ -154,7 +154,8 @@
   padding: 0 1rem;
   /* border: 1px solid white; */
   margin-bottom: 1rem;
-  /* background-color: #f7e4df; */
+
+  background-color: #efefe8;
 }
 .message__sender {
   /* background-color: rgb(194, 243, 194); */

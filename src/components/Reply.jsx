@@ -9,7 +9,7 @@ function Reply({ users, name, text, original }) {
     <div
       className="message__recipient"
       style={{
-        backgroundColor: "lightcoral",
+        backgroundColor: "#f2f295",
       }}
     >
       <div className="reply">

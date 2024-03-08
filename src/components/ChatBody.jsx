@@ -87,6 +87,7 @@ const ChatBody = ({
       try {
         const { data } = await axios.get(`${BASE_URL}users?room=${room}`);
         setUsers(data?.users);
+        console.log(users);
       } catch (error) {
         console.log(error);
       }
@@ -195,6 +196,7 @@ const ChatBody = ({
           const index = users.findIndex(
             (user) => user.userName == message.name
           );
+          console.log(users);
           console.log(message.name, index);
           return message.name === localStorage.getItem("userName") ? (
             <div className="message__chats" key={message.id}>
@@ -204,7 +206,7 @@ const ChatBody = ({
                 style={{
                   backgroundColor:
                     message?.name == "The Moderator"
-                      ? "lightcoral"
+                      ? "#f2f295"
                       : colors[
                           users.findIndex(
                             (user) => user.userName == message.name
@@ -236,7 +238,7 @@ const ChatBody = ({
                   style={{
                     backgroundColor:
                       message?.name == "The Moderator"
-                        ? "lightcoral"
+                        ? "f2f295"
                         : colors[
                             users.findIndex(
                               (user) => user.userName == message.name
