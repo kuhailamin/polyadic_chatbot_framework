@@ -22,7 +22,7 @@ const ChatPage = ({ socket, title }) => {
   useEffect(() => {
     socket.on("messageResponse", (data) => {
       const words = data?.text.split(/\s+/);
-      const time = calculateWritingTime(words);
+      const time = calculateWritingTime(words.length);
       setTimeout(() => {
         setMessages([...messages, data]);
       }, time);
