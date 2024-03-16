@@ -13,7 +13,7 @@ const ChatPage = ({ socket, title }) => {
   const [sessionTime, setSessionTime] = useState(0);
   const room = searchParams.get("room");
 
-  const WORD_PER_SECOND = 0.2;
+  const WORD_PER_SECOND = 0.6;
   function calculateWritingTime(words) {
     const totalTime = words * WORD_PER_SECOND;
     return totalTime;
