@@ -25,7 +25,7 @@ const ChatPage = ({ socket, title }) => {
       const time = calculateWritingTime(words.length);
       setTimeout(() => {
         setMessages([...messages, data]);
-      }, time);
+      }, time*1000);
     });
   }, [socket, messages]);
 
