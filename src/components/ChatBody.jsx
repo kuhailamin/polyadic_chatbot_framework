@@ -32,6 +32,7 @@ const ChatBody = ({
   const navigate = useNavigate();
   const [timer, setTimer] = useState(false);
   const [users, setUsers] = useState([]);
+  const [countdown, setCountdown] = useState(0);
 
   const [start, setStart] = useState(
     localStorage.getItem("userName").trim().toLowerCase() === "admin"
@@ -39,48 +40,65 @@ const ChatBody = ({
   useEffect(() => {
     socket.on("timerStarted", (data) => {
       setTimer(true);
-      if (data?.date) {
-        setSessionTime((prevSessionTime) => {
-          const currentDubaiTime = new Date().toLocaleString("en-US", {
-            timeZone: "Asia/Dubai",
-          });
+      // if (data?.date) {
+      //   setSessionTime((prevSessionTime) => {
+      //     const currentDubaiTime = new Date().toLocaleString("en-US", {
+      //       timeZone: "Asia/Dubai",
+      //     });
 
-          console.log(currentDubaiTime);
+      //     console.log(currentDubaiTime);
 
-          // Convert data.date to a Date object in Dubai timezone
-          const dubaiDate = new Date(data.date);
-          const dubaiTime = dubaiDate.toLocaleString("en-US", {
-            timeZone: "Asia/Dubai",
-          });
+      //     // Convert data.date to a Date object in Dubai timezone
+      //     const dubaiDate = new Date(data.date);
+      //     const dubaiTime = dubaiDate.toLocaleString("en-US", {
+      //       timeZone: "Asia/Dubai",
+      //     });
 
-          console.log(
-            dubaiTime,
-            // new Date(currentDubaiTime).getTime(),
-            // new Date(currentDubaiTime),
-            // new Date(dubaiTime),
-            "data.date",
-            data?.date
-          );
+      //     console.log(
+      //       dubaiTime,
+      //       // new Date(currentDubaiTime).getTime(),
+      //       // new Date(currentDubaiTime),
+      //       // new Date(dubaiTime),
+      //       "data.date",
+      //       data?.date
+      //     );
 
-          // Get the time in milliseconds for the Dubai date
-          const dubaiTimeMilliseconds = new Date(dubaiTime).getTime();
+      //     // Get the time in milliseconds for the Dubai date
+      //     const dubaiTimeMilliseconds = new Date(dubaiTime).getTime();
 
-          // Calculate the time difference in seconds
-          const timeDifferenceInSeconds =
-            (new Date(currentDubaiTime).getTime() - dubaiTimeMilliseconds) /
-            1000;
-          const calculatedTime = prevSessionTime - timeDifferenceInSeconds;
-          // console.log(
-          //   "sessionTime before setSessionTime",
-          //   prevSessionTime,
-          //   "calculatedTime",
-          //   calculatedTime
-          // );
-          return calculatedTime;
-        });
-      }
+      //     // Calculate the time difference in seconds
+      //     const timeDifferenceInSeconds =
+      //       (new Date(currentDubaiTime).getTime() - dubaiTimeMilliseconds) /
+      //       1000;
+      //     const calculatedTime = prevSessionTime - timeDifferenceInSeconds;
+      //     // console.log(
+      //     //   "sessionTime before setSessionTime",
+      //     //   prevSessionTime,
+      //     //   "calculatedTime",
+      //     //   calculatedTime
+      //     // );
+      //     return calculatedTime;
+      //   });
+      // }
     });
   }, [socket]);
+
+  useEffect(() => {
+    const checkTimer = async () => {
+      try {
+        const { data } = await axios.get(BASE_URL + "timeLeft?channel=" + room);
+        console.log(data.time, sessionTime);
+        setCountdown(Math.floor(sessionTime - data.time));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (!timer) return;
+
+    const intervalId = setInterval(checkTimer, 1000);
+    return () => clearInterval(intervalId);
+  }, [timer]);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -171,7 +189,9 @@ const ChatBody = ({
           onUpdate={handleTimerUpdate}
           onComplete={() => console.log("completed")}
         >
-          {({ remainingTime }) => fancyTimeFormat(remainingTime)}
+          {({ remainingTime }) =>
+            timer ? fancyTimeFormat(countdown) : fancyTimeFormat(sessionTime)
+          }
         </CountdownCircleTimer>
         <div>
           {start && (
@@ -196,8 +216,6 @@ const ChatBody = ({
           const index = users.findIndex(
             (user) => user.userName == message.name
           );
-          console.log(users);
-          console.log(message.name, index);
           return message.name === localStorage.getItem("userName") ? (
             <div className="message__chats" key={message.id}>
               <p className="sender__name">You</p>
