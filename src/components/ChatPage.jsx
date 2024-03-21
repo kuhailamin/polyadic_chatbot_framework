@@ -21,15 +21,7 @@ const ChatPage = ({ socket, title }) => {
 
   useEffect(() => {
     socket.on("messageResponse", (data) => {
-<<<<<<< HEAD
         setMessages([...messages, data]); 
-=======
-      const words = data?.text.split(/\s+/);
-      const time = calculateWritingTime(words.length);
-      setTimeout(() => {
-        setMessages([...messages, data]);
-      }, time*1000);
->>>>>>> 6825094edbebd6045f7b5c17e4d080196a1d8d71
     });
   }, [socket, messages]);
 
