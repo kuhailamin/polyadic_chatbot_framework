@@ -75,7 +75,7 @@ const Home = ({ socket }) => {
         name="channel"
         id="channel"
         min={0}
-        max={50}
+        max={400}
         onChange={(e) => setChannel(e.target.value)}
         required
       />
