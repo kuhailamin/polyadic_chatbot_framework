@@ -36,7 +36,7 @@ const ChatFooter = ({ socket, room }) => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleTyping}
         />
-        <button className="sendBtn">SEND</button>
+        <button className="sendBtn">SEND (Mesaj gönder)</button>
       </form>
     </div>
   );
