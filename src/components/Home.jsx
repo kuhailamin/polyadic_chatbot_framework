@@ -31,8 +31,8 @@ const Home = ({ socket }) => {
   };
   return (
     <form className="home__container" onSubmit={handleSubmit}>
-      <h2 className="home__header">Sign in to Open Chat</h2>
-      <label htmlFor="username">Name</label>
+      <h2 className="home__header">Sign in to Open Chat (Kayıt olmak)</h2>
+      <label htmlFor="username">Name (İsim)</label>
       <input
         type="text"
         minLength={2}
@@ -43,7 +43,7 @@ const Home = ({ socket }) => {
         onChange={handleChange}
         required
       />
-      <label htmlFor="password">Password</label>
+      <label htmlFor="password">Password (Şifre)</label>
       <input
         type="text"
         minLength={6}
@@ -69,7 +69,7 @@ const Home = ({ socket }) => {
         </>
       )}
 
-      <label htmlFor="channel">Channel</label>
+      <label htmlFor="channel">Channel (Kanal)</label>
       <input
         type="number"
         name="channel"
@@ -80,7 +80,7 @@ const Home = ({ socket }) => {
         required
       />
 
-      <button className="home__cta">SIGN IN</button>
+      <button className="home__cta">SIGN IN (KAYIT OLMAK)</button>
     </form>
   );
 };
