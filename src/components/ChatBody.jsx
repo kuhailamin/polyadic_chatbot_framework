@@ -196,17 +196,17 @@ const ChatBody = ({
         <div>
           {start && (
             <button className="start__btn" onClick={handleStartChat}>
-              Start
+              Start (Başla)
             </button>
           )}
           {localStorage.getItem("userName").trim().toLowerCase() ===
             "admin" && (
             <button className="leaveChat__btn" onClick={handleEndChat}>
-              End Chat
+              End Chat (Sohbeti Sonlandır)
             </button>
           )}
           <button className="leaveChat__btn" onClick={handleLeaveChat}>
-            Leave Chat
+            Leave Chat (Sohbetten Çık)
           </button>
         </div>
       </header>
